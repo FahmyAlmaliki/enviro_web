@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import type {
   HealthPayload,
   LatestPayload,
@@ -22,6 +22,13 @@ import { LogoSlot } from '@/components/logo-slot'
 import { StatusBadge } from '@/components/status-badge'
 
 const DEVICE = 'node-01'
+
+const TV_LOGOS = [
+  { file: 'ub', name: 'Universitas Brawijaya', caption: 'UB', width: '7.2vw' },
+  { file: 'elektro', name: 'Teknik Elektro', caption: 'Elektro', width: '6.8vw' },
+  { file: 'teknik-lingkungan', name: 'Teknik Lingkungan UB', caption: 'TL', width: '7.4vw' },
+  { file: 'ub-green-campus', name: 'UB Green Campus', caption: 'Green Campus', width: '7.4vw' },
+]
 
 const VALUE_COLOR: Record<Level, string> = {
   normal: '#1f2a37',
@@ -117,18 +124,15 @@ export default function TvPage() {
   return (
     <div className="flex h-screen w-screen flex-col gap-[0.9vw] overflow-hidden bg-page p-[0.9vw]">
       <header className="flex h-[9.5vh] shrink-0 items-center justify-between gap-[1vw] rounded-[10px] bg-surface px-[1.3vw] shadow-card">
-        <div className="flex items-center gap-[1vw]">
-          <div className="h-[6.2vh] w-[8.5vw]">
-            <LogoSlot file="ub.png" name="Universitas Brawijaya" caption="UB" size="tv" />
-          </div>
-          <span className="h-[4.5vh] w-px bg-line" />
-          <div className="h-[6.2vh] w-[8.5vw]">
-            <LogoSlot file="elektro.png" name="Teknik Elektro" caption="Elektro" size="tv" />
-          </div>
-          <span className="h-[4.5vh] w-px bg-line" />
-          <div className="h-[6.2vh] w-[7vw]">
-            <LogoSlot file="ftab.png" name="FTAB" size="tv" />
-          </div>
+        <div className="flex items-center gap-[0.8vw]">
+          {TV_LOGOS.map((logo, index) => (
+            <Fragment key={logo.file}>
+              {index > 0 ? <span className="h-[4.5vh] w-px bg-line" /> : null}
+              <div className="h-[5.8vh]" style={{ width: logo.width }}>
+                <LogoSlot file={logo.file} name={logo.name} caption={logo.caption} size="tv" />
+              </div>
+            </Fragment>
+          ))}
         </div>
 
         <div className="text-center">

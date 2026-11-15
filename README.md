@@ -249,7 +249,8 @@ Rentang: `1h`, `6h`, `24h`, `7d`, `30d`.
 - Rasio 1920×1080, tanpa scrollbar.
 - Gas yang tampil dipilih di **Layout TV**; PM2.5 dan PM10 selalu tampil.
 - Layout menyesuaikan jumlah gas (3–4 kolom) dan kartu terakhir melebar agar penuh.
-- Logo di `public/logos/`: `ub.png`, `elektro.png`, `ftab.png`. Tanpa file, muncul placeholder teks.
+- Logo di `public/logos/`: `ub`, `elektro`, `teknik-lingkungan`, `ub-green-campus`
+  (PNG transparan atau SVG). Tanpa file, muncul placeholder teks.
 
 Contoh kiosk:
 
