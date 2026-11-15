@@ -1,0 +1,24 @@
+[Unit]
+Description=Enviro Monitor sensor node
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=enviro
+Group=enviro
+WorkingDirectory=/opt/enviro-node
+EnvironmentFile=/opt/enviro-node/node.env
+ExecStart=/usr/bin/python3 /opt/enviro-node/enviro_node.py
+Restart=always
+RestartSec=5
+# Hentikan dengan rapi agar antrean tersimpan
+KillSignal=SIGTERM
+TimeoutStopSec=15
+
+# Sedikit pengerasan
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

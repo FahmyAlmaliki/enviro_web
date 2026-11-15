@@ -1,0 +1,106 @@
+# Nama project dipertahankan agar volume data yang sudah ada tetap terpakai.
+name: sensor-dashboard
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: enviro-influxdb
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUX_USER:-admin}
+      DOCKER_INFLUXDB_INIT_PASSWORD: "${INFLUX_PASSWORD:?INFLUX_PASSWORD belum diisi di .env}"
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUX_ORG:-ub}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUX_BUCKET:-air_quality}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "${INFLUX_TOKEN:?INFLUX_TOKEN belum diisi di .env}"
+      DOCKER_INFLUXDB_INIT_RETENTION: 30d
+      # Batasi memori agar tidak menghabiskan RAM VM
+      GOMEMLIMIT: 512MiB
+      INFLUXD_STORAGE_CACHE_MAX_MEMORY_SIZE: "134217728"
+      INFLUXD_STORAGE_CACHE_SNAPSHOT_MEMORY_SIZE: "67108864"
+    mem_limit: 1g
+    memswap_limit: 1g
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - influx-data:/var/lib/influxdb2
+    ports:
+      - "127.0.0.1:8086:8086"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8086/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - enviro
+
+  app:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_BASE_PATH: ${NEXT_PUBLIC_BASE_PATH:-/enviro}
+    container_name: enviro-app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      DATA_DIR: /app/data
+      NODE_OPTIONS: --max-old-space-size=224
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+    # Batas keras agar proses tidak membengkak
+    mem_limit: 384m
+    memswap_limit: 384m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # Chunk Next.js disajikan dari RAM agar tidak menunggu disk lambat
+    tmpfs:
+      - /app/.next:size=192m
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    networks:
+      - enviro
+
+  simulator:
+    image: node:20-alpine
+    container_name: enviro-simulator
+    restart: unless-stopped
+    profiles: ["demo"]
+    command: ["node", "/scripts/simulator.mjs"]
+    environment:
+      INGEST_URL: http://app:3000${NEXT_PUBLIC_BASE_PATH:-/enviro}/api/ingest
+      INGEST_API_KEY: ${INGEST_API_KEY}
+      INTERVAL_MS: "5000"
+      DEVICE_ID: node-01
+    volumes:
+      - ./scripts:/scripts:ro
+    mem_limit: 128m
+    memswap_limit: 128m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      - app
+    networks:
+      - enviro
+
+volumes:
+  influx-data:
+
+networks:
+  enviro:
+    driver: bridge

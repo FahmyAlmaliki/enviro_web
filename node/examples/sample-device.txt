@@ -1,0 +1,37 @@
+=================================================================
+       ENVIRONMENT MONITORING SYSTEM
+=================================================================
+Timestamp : 2026-11-05T01:49:26
+
+[SPS30] PARTICULATE MATTER
+PM1.0  : 8.914403915405273
+PM2.5  : 9.426648139953613
+PM4.0  : 9.426651954650879
+PM10.0 : 9.426654815673828
+
+[MiCS-4514] GAS SENSOR
+OX ADC  : 77
+RED ADC : 295
+POWER   : 846
+Ratio OX  : 1.023831713486886
+Ratio RED : 1.0182960635742007
+CO      : 0 ppm
+CH4     : 0 ppm
+Ethanol : 0 ppm
+H2      : 0 ppm
+NH3     : 0 ppm
+NO2     : 0 ppm
+
+[MQ-136] H2S SENSOR
+RAW     : 4155
+Voltage : 0.6002500000000001 V
+
+[SHT41] TEMPERATURE & HUMIDITY
+Temperature : 26.126878767071034 Â°C
+Humidity    : 68.89890897993439 %
+
+[BMP280] ATMOSPHERIC
+Temperature : 24.7865234375 Â°C
+Pressure    : 957.8051343827204 hPa
+Altitude    : 472.23030041509816 m
+=================================================================

@@ -1,0 +1,11 @@
+# Inti klien hanya memakai pustaka standar Python 3.9+.
+# Tidak ada dependensi wajib untuk mode mock/stdin/file.
+
+# Wajib hanya untuk --source serial
+pyserial>=3.5
+
+# Opsional, untuk contoh pembacaan hardware langsung di Raspberry Pi:
+# sensirion-i2c-driver>=1.0
+# sensirion-i2c-sps30>=3.0
+# adafruit-blinka
+# adafruit-ads1x15
