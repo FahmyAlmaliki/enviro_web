@@ -137,7 +137,7 @@ Salin `.env.example` menjadi `.env`. File `.env` **tidak** ikut di-commit.
 
 ```bash
 # isi 24 jam data historis
-docker compose run --rm simulator node /scripts/seed.mjs
+docker compose --profile demo run --rm simulator node /scripts/seed.mjs
 
 # kirim data baru tiap 5 detik
 docker compose --profile demo up -d simulator
